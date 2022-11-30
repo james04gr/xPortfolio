@@ -2,6 +2,7 @@ package com.example.portfolio
 
 import android.app.Application
 import com.example.portfolio.di.networkModule
+import com.example.portfolio.di.repositoryModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 
@@ -14,7 +15,7 @@ class PortfolioApplication: Application() {
             androidContext(this@PortfolioApplication)
             modules(
                 arrayListOf(
-                    networkModule
+                    networkModule, repositoryModule
                 )
             )
         }
