@@ -1,19 +1,22 @@
 package com.example.portfolio.data.remote.api
 
+import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
 
-class HeaderInterceptor : Interceptor {
+class AuthenticationInterceptor(
+    private val username: String, private val password: String
+) : Interceptor {
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
+        val credentials: String = Credentials.basic(username, password)
         var request = chain.request()
-        val requestBuilder = request.newBuilder()
+        val requestBuilder = request.newBuilder().apply {
+            header("Authorization", credentials)
+        }
 
-        requestBuilder.addHeader("Server", "ktor-server-core/1.3.2 ktor-server-core/1.3.2")
-        requestBuilder.addHeader("Content-Type", "application/json;charset=utf-8")
-        requestBuilder.addHeader("Connection", "keep-alive")
         request = requestBuilder.build()
 
         return chain.proceed(request)

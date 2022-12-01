@@ -1,4 +1,4 @@
-package com.example.portfolio.ui.accounts_list
+package com.example.portfolio.ui.account_list
 
 import android.text.TextUtils
 import android.view.LayoutInflater
