@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/detailsType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Type: "
+            app:layout_constraintBottom_toTopOf="@+id/productName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="Product name: "
+            app:layout_constraintBottom_toTopOf="@+id/openedDate"
+            app:layout_constraintEnd_toEndOf="@+id/detailsType"
+            app:layout_constraintStart_toStartOf="@+id/detailsType"
+            app:layout_constraintTop_toBottomOf="@+id/detailsType" />
+
+        <TextView
+            android:id="@+id/openedDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Opened date: "
+            app:layout_constraintBottom_toTopOf="@+id/branch"
+            app:layout_constraintEnd_toEndOf="@+id/detailsType"
+            app:layout_constraintStart_toStartOf="@+id/detailsType"
+            app:layout_constraintTop_toBottomOf="@+id/productName" />
+
+        <TextView
+            android:id="@+id/branch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="Branch: "
+            app:layout_constraintBottom_toTopOf="@+id/beneficiaries"
+            app:layout_constraintEnd_toEndOf="@+id/detailsType"
+            app:layout_constraintStart_toStartOf="@+id/detailsType"
+            app:layout_constraintTop_toBottomOf="@+id/openedDate" />
+
+        <TextView
+            android:id="@+id/beneficiaries"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Beneficiaries: "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/detailsType"
+            app:layout_constraintStart_toStartOf="@+id/detailsType"
+            app:layout_constraintTop_toBottomOf="@+id/branch" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/detailsGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="productName,branch,beneficiaries,detailsType,openedDate" />
+
+        <ProgressBar
+            android:id="@+id/detailsLoading"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

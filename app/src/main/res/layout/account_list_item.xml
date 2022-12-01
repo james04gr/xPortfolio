@@ -14,13 +14,12 @@
 
         <TextView
             android:id="@+id/nickname"
-            android:layout_width="363dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="My Account 10000"
+            android:text="Unknown account"
             android:textAlignment="textStart"
-            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -29,11 +28,10 @@
 
         <TextView
             android:id="@+id/balance"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="1.000 EUR"
+            android:text="0 EUR"
             android:textAlignment="center"
-            android:textColor="@color/black"
             android:textSize="40sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,9 +40,9 @@
 
         <TextView
             android:id="@+id/type"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Type: Savings"
+            android:text="Type: unknown"
             android:textAlignment="textEnd"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"

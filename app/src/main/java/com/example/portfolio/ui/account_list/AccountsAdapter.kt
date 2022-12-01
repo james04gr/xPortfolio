@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.portfolio.data.remote.dto.AccountDto
 import com.example.portfolio.databinding.AccountListItemBinding
 
-class AccountsAdapter : RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>() {
+class AccountsAdapter(
+    private val onItemClicked: AccountListItemClicked
+): RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>() {
 
     private var accounts = listOf<AccountDto>()
 
@@ -23,19 +25,23 @@ class AccountsAdapter : RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>(
         AccountViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: AccountViewHolder, position: Int) =
-        holder.bind(accounts[position])
+        holder.bind(accounts[position], onItemClicked)
 
     override fun getItemCount(): Int = accounts.size
 
     class AccountViewHolder internal constructor(private val binding: AccountListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(account: AccountDto) {
+        fun bind(account: AccountDto, onItemClicked: AccountListItemClicked) {
             binding.nickname.text =
                 if (TextUtils.isEmpty(account.account_nickname)) account.account_number.toString()
                 else account.account_nickname
-            binding.balance.text = account.balance
-            binding.type.text = "Type: ${account.account_type}"
+            binding.balance.text = account.balance + " " + account.currency_code
+            binding.type.text = account.account_type
+
+            itemView.setOnClickListener {
+                onItemClicked.onAccountClicked(account)
+            }
         }
 
         companion object {

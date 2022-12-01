@@ -5,13 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.portfolio.R
+import com.example.portfolio.common.toast
+import com.example.portfolio.data.remote.dto.AccountDto
 import com.example.portfolio.databinding.FragmentAccountListBinding
 import com.example.portfolio.ui.MainViewModel
+import com.example.portfolio.ui.account_details.AccountDetailsFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -30,7 +36,11 @@ class AccountListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewManager = LinearLayoutManager(requireContext())
-        viewAdapter = AccountsAdapter()
+        viewAdapter = AccountsAdapter(object: AccountListItemClicked {
+            override fun onAccountClicked(accountDto: AccountDto) {
+                navigateToAccountDetails(accountDto)
+            }
+        })
 
         binding.accountsRecycler.apply {
             setHasFixedSize(true)
@@ -63,6 +73,18 @@ class AccountListFragment : Fragment() {
             binding.errorText.text = ""
             binding.errorText.visibility = View.GONE
         }
+    }
+
+    private fun navigateToAccountDetails(accountDto: AccountDto) {
+        if (accountDto.id.isEmpty()) {
+            toast("Account id is empty")
+            return
+        }
+
+        mainViewModel.setSelectedAccountId(accountDto.id)
+        mainViewModel.getAccountDetails(accountDto.id)
+        val bundle = bundleOf(AccountDetailsFragment.ACCOUNT_ID to accountDto.id)
+        findNavController().navigate(R.id.action_accountListFragment_to_accountDetailsFragment, bundle)
     }
 
 }
