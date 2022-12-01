@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.portfolio'
+    namespace 'com.xecoding.portfolio'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.portfolio"
+        applicationId "com.xecoding.portfolio"
         minSdk 31
         targetSdk 33
         versionCode 1
