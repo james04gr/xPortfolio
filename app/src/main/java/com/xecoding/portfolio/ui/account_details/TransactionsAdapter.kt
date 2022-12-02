@@ -83,7 +83,7 @@ class TransactionsAdapter : PagingDataAdapter<TransactionUi, RecyclerView.ViewHo
                     )
                 )
             }
-            binding.description.text = transaction.date
+            binding.description.text = transaction.description ?: ""
         }
 
         companion object {

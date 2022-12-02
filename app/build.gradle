@@ -87,6 +87,9 @@ dependencies {
     // Date Utils
     implementation "com.jakewharton.threetenabp:threetenabp:1.4.0"
 
+    // Favorite Toggle
+    implementation "com.github.ivbaranov:materialfavoritebutton:0.1.5"
+
     // Room Database
     def room_version = "2.5.0-beta02"
     implementation "androidx.room:room-runtime:$room_version"

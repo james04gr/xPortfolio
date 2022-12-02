@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.ivbaranov.mfb.MaterialFavoriteButton
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.xecoding.portfolio.common.*
@@ -28,7 +29,7 @@ class AccountDetailsFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentAccountDetailsBinding
     private lateinit var viewAdapter: TransactionsAdapter
-    private var currentAccountId: String = ""
+    private lateinit var currentAccount: AccountDto
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentAccountDetailsBinding.inflate(inflater, container, false)
@@ -56,7 +57,7 @@ class AccountDetailsFragment : Fragment() {
                         it.firstOrNull()?.let { account ->
                             updateSelectedAccountViews(account)
                             requireActivity().title = account.displayName()
-                            currentAccountId = account.id
+                            currentAccount = account
                         }
                     }
                 }
@@ -96,6 +97,7 @@ class AccountDetailsFragment : Fragment() {
         binding.account.balance.text = account.amountWithCurrency()
         binding.account.type.text = account.account_type
         binding.details.detailsType.text = "<b>Type:</b> ${account.account_type}".asHtml()
+        // ToDo Mark as Favorite if it is
     }
 
     private fun updateAccountDetailsViews(state: AccountDetailsState) {
@@ -109,6 +111,19 @@ class AccountDetailsFragment : Fragment() {
                 branch.text = "<b>Branch:</b> ${it.branch}".asHtml()
                 beneficiaries.text = "<b>Beneficiaries:</b> ${it.beneficiaries.joinToString(separator = ", ")}".asHtml()
             }
+
+            binding.details.favoriteBtn.visibility = View.VISIBLE
+            binding.details.favoriteBtn.setOnFavoriteChangeListener { _, favorite ->
+                if (favorite) {
+                    println(it)
+                    println(currentAccount)
+                } else {
+                    // Delete from Database
+                    println("Delete..............")
+                }
+            }
+        } ?: run {
+            binding.details.favoriteBtn.visibility = View.GONE
         }
 
         binding.details.root.visibility = if (state.error == null) View.VISIBLE else View.GONE
@@ -129,7 +144,7 @@ class AccountDetailsFragment : Fragment() {
         viewAdapter.submitData(lifecycle, PagingData.empty())
         mainViewModel.setIsFiltered(true)
         mainViewModel.setInputSource(
-            currentAccountId,
+            currentAccount.id,
             fromDate = start.formatAs(),
             toDate = end.formatAs())
     }
@@ -137,7 +152,7 @@ class AccountDetailsFragment : Fragment() {
     private fun clearDateFilters() {
         viewAdapter.submitData(lifecycle, PagingData.empty())
         mainViewModel.setIsFiltered(false)
-        mainViewModel.setInputSource(currentAccountId, "", "")
+        mainViewModel.setInputSource(currentAccount.id, "", "")
     }
 
     companion object {
