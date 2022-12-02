@@ -2,7 +2,7 @@ package com.xecoding.portfolio.domain.use_case
 
 import com.xecoding.portfolio.common.NetworkResponse
 import com.xecoding.portfolio.data.remote.dto.AccountDto
-import com.xecoding.portfolio.domain.repository.AccountRepository
+import com.xecoding.portfolio.domain.repository.accounts.AccountRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -18,10 +18,10 @@ class GetAccountListUseCase(
     operator fun invoke(): Flow<NetworkResponse<List<AccountDto>>> = flow {
         try {
             emit(NetworkResponse.Loading())
-            delay(2000)
-            // val allAccounts = accountRepository.getAccounts()
-            // emit(NetworkResponse.Success(allAccounts))
-            emit(NetworkResponse.Success(getAccountsDummy()))
+            val allAccounts = accountRepository.getAccounts()
+            emit(NetworkResponse.Success(allAccounts))
+//            delay(2000)
+//            emit(NetworkResponse.Success(getAccountsDummy()))
             //throw java.lang.Exception("Hello re malakaes")
         } catch (e: Exception) {
             e.printStackTrace()

@@ -18,6 +18,7 @@ import com.xecoding.portfolio.data.remote.dto.AccountDto
 import com.xecoding.portfolio.databinding.FragmentAccountListBinding
 import com.xecoding.portfolio.ui.MainViewModel
 import com.xecoding.portfolio.ui.account_details.AccountDetailsFragment
+import com.xecoding.portfolio.ui.account_details.InputSource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -83,6 +84,8 @@ class AccountListFragment : Fragment() {
 
         mainViewModel.setSelectedAccountId(accountDto.id)
         mainViewModel.getAccountDetails(accountDto.id)
+        mainViewModel.setInputSource(accountId = accountDto.id, fromDate = "", toDate = "")
+
         val bundle = bundleOf(AccountDetailsFragment.ACCOUNT_ID to accountDto.id)
         findNavController().navigate(R.id.action_accountListFragment_to_accountDetailsFragment, bundle)
     }

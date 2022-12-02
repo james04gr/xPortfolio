@@ -10,10 +10,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.xecoding.portfolio.databinding.FragmentAccountDetailsBinding
 import com.xecoding.portfolio.common.asHtml
 import com.xecoding.portfolio.data.remote.dto.AccountDto
 import com.xecoding.portfolio.ui.MainViewModel
+import com.xecoding.portfolio.ui.account_list.AccountListItemClicked
+import com.xecoding.portfolio.ui.account_list.AccountsAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -21,6 +24,8 @@ class AccountDetailsFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentAccountDetailsBinding
+    private lateinit var viewAdapter: TransactionsAdapter
+    private var currentAccountId: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentAccountDetailsBinding.inflate(inflater, container, false)
@@ -30,6 +35,15 @@ class AccountDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val viewManager = LinearLayoutManager(requireContext())
+        viewAdapter = TransactionsAdapter()
+
+        binding.transactions.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             // Below block is executed when lifecycle is at least STARTED and is cancelled when lifecycle is STOPPED
             // Each collection needs a separate coroutine since its a blocking function
@@ -38,6 +52,7 @@ class AccountDetailsFragment : Fragment() {
                     mainViewModel.selectedAccount.collectLatest {
                         it.firstOrNull()?.let { account ->
                             updateSelectedAccountViews(account)
+                            currentAccountId = account.id
                         }
                     }
                 }
@@ -47,8 +62,17 @@ class AccountDetailsFragment : Fragment() {
                         updateAccountDetailsViews(it)
                     }
                 }
+
+                launch {
+                    mainViewModel.transactionsFlow.collectLatest {
+                        viewAdapter.submitData(it)
+                    }
+                }
             }
         }
+
+//        mainViewModel.setInputSource(currentAccountId, "", "")
+//        mainViewModel.setInputSource(currentAccountId, "2018-01-16T13:15:30+03:00", "2018-05-16T13:15:30+03:00")
     }
 
     private fun updateSelectedAccountViews(account: AccountDto) {
@@ -72,6 +96,8 @@ class AccountDetailsFragment : Fragment() {
                 beneficiaries.text = "<b>Beneficiaries:</b> ${it.beneficiaries.joinToString(separator = ", ")}".asHtml()
             }
         }
+
+        binding.details.root.visibility = if (state.error == null) View.VISIBLE else View.GONE
     }
 
     companion object {

@@ -9,6 +9,7 @@ import com.xecoding.portfolio.BuildConfig
 import com.xecoding.portfolio.data.remote.api.AuthenticationInterceptor
 import com.xecoding.portfolio.data.remote.api.HeaderInterceptor
 import com.xecoding.portfolio.data.remote.api.PortfolioApi
+import com.xecoding.portfolio.domain.repository.transactions.TransactionsPagingSource
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
@@ -26,7 +27,7 @@ val networkModule = module {
 
     single<AuthenticationInterceptor> {
         return@single AuthenticationInterceptor(
-            com.xecoding.portfolio.BuildConfig.API_USERNAME, com.xecoding.portfolio.BuildConfig.API_PASSWORD
+            BuildConfig.API_USERNAME, BuildConfig.API_PASSWORD
         )
     }
 
@@ -45,7 +46,7 @@ val networkModule = module {
 
     single<PortfolioApi> {
         return@single Retrofit.Builder().apply {
-            baseUrl(com.xecoding.portfolio.BuildConfig.BASE_URL)
+            baseUrl(BuildConfig.BASE_URL)
             addCallAdapterFactory(CoroutineCallAdapterFactory())
             addConverterFactory(GsonConverterFactory.create())
             client(get<OkHttpClient>())
