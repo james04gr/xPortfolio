@@ -2,11 +2,9 @@ package com.xecoding.portfolio.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.xecoding.portfolio.common.NetworkResponse
+import com.xecoding.portfolio.common.isSameDay
 import com.xecoding.portfolio.data.remote.dto.Transaction
 import com.xecoding.portfolio.domain.repository.transactions.TransactionsPagingSource
 import com.xecoding.portfolio.domain.use_case.GetAccountDetailsUseCase
@@ -15,6 +13,7 @@ import com.xecoding.portfolio.domain.use_case.GetAccountTransactionsUseCase
 import com.xecoding.portfolio.ui.account_details.AccountDetailsState
 import com.xecoding.portfolio.ui.account_details.AccountTransactionsState
 import com.xecoding.portfolio.ui.account_details.InputSource
+import com.xecoding.portfolio.ui.account_details.TransactionUi
 import com.xecoding.portfolio.ui.account_list.AccountListState
 import kotlinx.coroutines.flow.*
 import org.koin.core.component.KoinComponent
@@ -46,14 +45,20 @@ class MainViewModel: ViewModel(), KoinComponent {
         list.accounts.filter { it.id == id }
     }
 
-    private val _inputSource = MutableStateFlow(InputSource())
+    private val _inputSource  = MutableStateFlow(InputSource())
     fun setInputSource(accountId: String, fromDate: String, toDate: String) {
         _inputSource.value = InputSource(accountId, fromDate, toDate)
     }
 
+    private val _isFiltered = MutableStateFlow(false)
+    val isFiltered = _isFiltered
+    fun setIsFiltered(flag: Boolean) {
+        _isFiltered.value = flag
+    }
+
     // Here we switch out observe to trigger a new PagingSource
     // in order to distinguish between All transactions - Filtered transactions
-    val transactionsFlow: Flow<PagingData<Transaction>> = _inputSource.flatMapLatest { input ->
+    val transactionsFlow: Flow<PagingData<TransactionUi>> = _inputSource.flatMapLatest { input ->
         Pager(
             config = PagingConfig(pageSize = 10)
         ) {
@@ -62,7 +67,26 @@ class MainViewModel: ViewModel(), KoinComponent {
                 fromDate = input.fromDate,
                 toDate = input.toDate
             )
-        }.flow.cachedIn(viewModelScope)
+        }.flow.cachedIn(viewModelScope).map { pagingData ->
+            pagingData.map { t ->
+                TransactionUi.TransactionItem(t)
+            }.insertSeparators { before: TransactionUi.TransactionItem?, after: TransactionUi.TransactionItem? ->
+                when {
+                    before == null && after == null -> null
+                    before != null && after == null -> TransactionUi.DateItem(before.transaction.date)
+                    before == null && after != null -> TransactionUi.DateItem(after.transaction.date)
+                    before != null && after != null ->
+                        if (!isSameDay(
+                                before.transaction.date,
+                                after.transaction.date
+                            )
+                        )
+                            TransactionUi.DateItem(after.transaction.date)
+                        else null
+                    else -> null
+                }
+            }
+        }
     }
 
     init {

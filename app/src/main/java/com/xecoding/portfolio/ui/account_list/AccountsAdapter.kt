@@ -1,10 +1,11 @@
 package com.xecoding.portfolio.ui.account_list
 
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.xecoding.portfolio.common.amountWithCurrency
+import com.xecoding.portfolio.common.displayName
 import com.xecoding.portfolio.data.remote.dto.AccountDto
 import com.xecoding.portfolio.databinding.AccountListItemBinding
 
@@ -33,10 +34,8 @@ class AccountsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(account: AccountDto, onItemClicked: AccountListItemClicked) {
-            binding.nickname.text =
-                if (TextUtils.isEmpty(account.account_nickname)) account.account_number.toString()
-                else account.account_nickname
-            binding.balance.text = account.balance + " " + account.currency_code
+            binding.nickname.text = account.displayName()
+            binding.balance.text = account.amountWithCurrency()
             binding.type.text = account.account_type
 
             itemView.setOnClickListener {

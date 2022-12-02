@@ -10,13 +10,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.xecoding.portfolio.common.*
 import com.xecoding.portfolio.databinding.FragmentAccountDetailsBinding
-import com.xecoding.portfolio.common.asHtml
-import com.xecoding.portfolio.common.formatAs
-import com.xecoding.portfolio.common.toast
 import com.xecoding.portfolio.data.remote.dto.AccountDto
 import com.xecoding.portfolio.ui.MainViewModel
 import com.xecoding.portfolio.ui.account_list.AccountListItemClicked
@@ -56,6 +55,7 @@ class AccountDetailsFragment : Fragment() {
                     mainViewModel.selectedAccount.collectLatest {
                         it.firstOrNull()?.let { account ->
                             updateSelectedAccountViews(account)
+                            requireActivity().title = account.displayName()
                             currentAccountId = account.id
                         }
                     }
@@ -72,19 +72,28 @@ class AccountDetailsFragment : Fragment() {
                         viewAdapter.submitData(it)
                     }
                 }
+
+                launch {
+                    // In order to hide the Clear button if Filter has not been applied
+                    mainViewModel.isFiltered.collectLatest {
+                        binding.clear.visibility = if (it) View.VISIBLE else View.GONE
+                    }
+                }
             }
         }
 
-        binding.set.setOnClickListener {
+        binding.filter.setOnClickListener {
             dateDialog()
+        }
+
+        binding.clear.setOnClickListener {
+            clearDateFilters()
         }
     }
 
     private fun updateSelectedAccountViews(account: AccountDto) {
-        binding.account.nickname.text =
-            if (TextUtils.isEmpty(account.account_nickname)) account.account_number.toString()
-            else account.account_nickname
-        binding.account.balance.text = account.balance + " " + account.currency_code
+        binding.account.nickname.text = account.displayName()
+        binding.account.balance.text = account.amountWithCurrency()
         binding.account.type.text = account.account_type
         binding.details.detailsType.text = "<b>Type:</b> ${account.account_type}".asHtml()
     }
@@ -117,6 +126,8 @@ class AccountDetailsFragment : Fragment() {
     }
 
     private fun dateRangePicked(start: Long, end: Long) {
+        viewAdapter.submitData(lifecycle, PagingData.empty())
+        mainViewModel.setIsFiltered(true)
         mainViewModel.setInputSource(
             currentAccountId,
             fromDate = start.formatAs(),
@@ -124,6 +135,8 @@ class AccountDetailsFragment : Fragment() {
     }
 
     private fun clearDateFilters() {
+        viewAdapter.submitData(lifecycle, PagingData.empty())
+        mainViewModel.setIsFiltered(false)
         mainViewModel.setInputSource(currentAccountId, "", "")
     }
 
