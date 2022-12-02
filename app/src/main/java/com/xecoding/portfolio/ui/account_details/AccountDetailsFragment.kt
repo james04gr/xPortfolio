@@ -11,8 +11,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.xecoding.portfolio.databinding.FragmentAccountDetailsBinding
 import com.xecoding.portfolio.common.asHtml
+import com.xecoding.portfolio.common.formatAs
+import com.xecoding.portfolio.common.toast
 import com.xecoding.portfolio.data.remote.dto.AccountDto
 import com.xecoding.portfolio.ui.MainViewModel
 import com.xecoding.portfolio.ui.account_list.AccountListItemClicked
@@ -71,8 +75,9 @@ class AccountDetailsFragment : Fragment() {
             }
         }
 
-//        mainViewModel.setInputSource(currentAccountId, "", "")
-//        mainViewModel.setInputSource(currentAccountId, "2018-01-16T13:15:30+03:00", "2018-05-16T13:15:30+03:00")
+        binding.set.setOnClickListener {
+            dateDialog()
+        }
     }
 
     private fun updateSelectedAccountViews(account: AccountDto) {
@@ -98,6 +103,28 @@ class AccountDetailsFragment : Fragment() {
         }
 
         binding.details.root.visibility = if (state.error == null) View.VISIBLE else View.GONE
+    }
+
+    private fun dateDialog() {
+        val dateRangePicker =
+            MaterialDatePicker.Builder.dateRangePicker().apply {
+                setTitleText("Select dates")
+                setCalendarConstraints(CalendarConstraints.Builder().setEnd(System.currentTimeMillis()).build())
+            }.build().apply {
+                addOnPositiveButtonClickListener { dateRangePicked(it.first, it.second) }
+            }
+        dateRangePicker.show(childFragmentManager, "")
+    }
+
+    private fun dateRangePicked(start: Long, end: Long) {
+        mainViewModel.setInputSource(
+            currentAccountId,
+            fromDate = start.formatAs(),
+            toDate = end.formatAs())
+    }
+
+    private fun clearDateFilters() {
+        mainViewModel.setInputSource(currentAccountId, "", "")
     }
 
     companion object {

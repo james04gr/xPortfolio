@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun runOnUiThread(code: () -> Unit) {
     Handler(Looper.getMainLooper()).post {
@@ -29,3 +31,6 @@ fun Context.toast(text: String, length: Int = Toast.LENGTH_LONG) {
 
 fun String.asHtml(): Spanned =
     HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_LEGACY)
+
+fun Long.formatAs(format: String = Params.DEFAULT_DATE_FORMAT): String =
+    SimpleDateFormat(format).format(Date(this))
