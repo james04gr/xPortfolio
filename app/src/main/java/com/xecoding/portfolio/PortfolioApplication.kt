@@ -1,6 +1,7 @@
 package com.xecoding.portfolio
 
 import android.app.Application
+import com.xecoding.portfolio.di.databaseModule
 import com.xecoding.portfolio.di.networkModule
 import com.xecoding.portfolio.di.repositoryModule
 import com.xecoding.portfolio.di.useCaseModule
@@ -16,7 +17,7 @@ class PortfolioApplication: Application() {
             androidContext(this@PortfolioApplication)
             modules(
                 arrayListOf(
-                    networkModule, repositoryModule, useCaseModule
+                    networkModule, repositoryModule, useCaseModule, databaseModule
                 )
             )
         }

@@ -1,11 +1,11 @@
 package com.xecoding.portfolio.ui.account_list
 
 import androidx.recyclerview.widget.DiffUtil
-import com.xecoding.portfolio.data.remote.dto.AccountDto
+import com.xecoding.portfolio.data.persistent.Account
 
 class AccountsDiffUtilCallback(
-    private val oldList: List<AccountDto>,
-    private val newList: List<AccountDto>
+    private val oldList: List<Account>,
+    private val newList: List<Account>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
@@ -22,6 +22,7 @@ class AccountsDiffUtilCallback(
         return oldItem.account_nickname == newItem.account_nickname
                 && oldItem.balance == newItem.balance
                 && oldItem.account_type == newItem.account_type
+                && oldItem.isFavorite == newItem.isFavorite
     }
 
 }

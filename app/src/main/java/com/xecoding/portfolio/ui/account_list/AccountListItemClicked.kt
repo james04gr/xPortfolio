@@ -1,9 +1,9 @@
 package com.xecoding.portfolio.ui.account_list
 
-import com.xecoding.portfolio.data.remote.dto.AccountDto
+import com.xecoding.portfolio.data.persistent.Account
 
 interface AccountListItemClicked {
 
-    fun onAccountClicked(accountDto: AccountDto)
+    fun onAccountClicked(account: Account)
 
 }

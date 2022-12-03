@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            app:constraint_referenced_ids="productName,branch,beneficiaries,detailsType,openedDate, favoriteBtn" />
+            app:constraint_referenced_ids="productName,branch,beneficiaries,detailsType,openedDate" />
 
         <ProgressBar
             android:id="@+id/detailsLoading"
@@ -82,17 +82,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.github.ivbaranov.mfb.MaterialFavoriteButton
-            android:id="@+id/favoriteBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:mfb_animate_favorite="true"
-            app:mfb_animate_unfavorite="false"
-            app:mfb_type="heart"
-            app:mfb_color="white"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

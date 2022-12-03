@@ -13,12 +13,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xecoding.portfolio.R
-import com.xecoding.portfolio.common.toast
-import com.xecoding.portfolio.data.remote.dto.AccountDto
+import com.xecoding.portfolio.data.persistent.Account
 import com.xecoding.portfolio.databinding.FragmentAccountListBinding
 import com.xecoding.portfolio.ui.MainViewModel
 import com.xecoding.portfolio.ui.account_details.AccountDetailsFragment
-import com.xecoding.portfolio.ui.account_details.InputSource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -38,8 +36,8 @@ class AccountListFragment : Fragment() {
 
         val viewManager = LinearLayoutManager(requireContext())
         viewAdapter = AccountsAdapter(object: AccountListItemClicked {
-            override fun onAccountClicked(accountDto: AccountDto) {
-                navigateToAccountDetails(accountDto)
+            override fun onAccountClicked(account: Account) {
+                navigateToAccountDetails(account)
             }
         })
 
@@ -53,19 +51,28 @@ class AccountListFragment : Fragment() {
             // Below block is executed when lifecycle is at least STARTED and is cancelled when lifecycle is STOPPED
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 // Safely collect from mainViewModel.accounts when the lifecycle is STARTED
-                mainViewModel.accounts.collectLatest {
-                    println(it)
-                    updateViews(it)
+                launch {
+                    mainViewModel.accountsState.collectLatest {
+                        updateViews(it)
+                    }
+                }
+
+                launch {
+                    mainViewModel.accounts.collectLatest {
+                        viewAdapter.updateItems(it)
+                    }
                 }
             }
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            mainViewModel.refreshAccounts()
         }
     }
 
     private fun updateViews(state: AccountListState) {
-        binding.loadingGroup.visibility = if (state.isLoading) View.VISIBLE else View.GONE
-
+        binding.swipeRefreshLayout.isRefreshing = state.isLoading
         binding.accountsRecycler.visibility = if (state.isLoading) View.GONE else View.VISIBLE
-        viewAdapter.updateItems(state.accounts)
 
         state.error?.let {
             binding.errorText.text = it
@@ -76,17 +83,12 @@ class AccountListFragment : Fragment() {
         }
     }
 
-    private fun navigateToAccountDetails(accountDto: AccountDto) {
-        if (accountDto.id.isEmpty()) {
-            toast("Account id is empty")
-            return
-        }
+    private fun navigateToAccountDetails(account: Account) {
+        mainViewModel.setSelectedAccountId(account.id)
+        mainViewModel.getAccountDetails(account.id)
+        mainViewModel.setInputSource(accountId = account.id, fromDate = "", toDate = "")
 
-        mainViewModel.setSelectedAccountId(accountDto.id)
-        mainViewModel.getAccountDetails(accountDto.id)
-        mainViewModel.setInputSource(accountId = accountDto.id, fromDate = "", toDate = "")
-
-        val bundle = bundleOf(AccountDetailsFragment.ACCOUNT_ID to accountDto.id)
+        val bundle = bundleOf(AccountDetailsFragment.ACCOUNT_ID to account.id)
         findNavController().navigate(R.id.action_accountListFragment_to_accountDetailsFragment, bundle)
     }
 

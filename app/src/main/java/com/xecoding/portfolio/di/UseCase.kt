@@ -1,8 +1,6 @@
 package com.xecoding.portfolio.di
 
-import com.xecoding.portfolio.domain.use_case.GetAccountDetailsUseCase
-import com.xecoding.portfolio.domain.use_case.GetAccountListUseCase
-import com.xecoding.portfolio.domain.use_case.GetAccountTransactionsUseCase
+import com.xecoding.portfolio.domain.use_case.*
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -15,8 +13,20 @@ val useCaseModule = module {
         return@single GetAccountDetailsUseCase(get())
     }
 
-    single<GetAccountTransactionsUseCase> {
-        return@single GetAccountTransactionsUseCase(get())
+    single<InsertFavoriteAccountUseCase> {
+        return@single InsertFavoriteAccountUseCase(get())
+    }
+
+    single<DeleteFavoriteAccountUseCase> {
+        return@single DeleteFavoriteAccountUseCase(get())
+    }
+
+    single<ObserveAccountsUseCase> {
+        return@single ObserveAccountsUseCase(get())
+    }
+
+    single<GetAccountUseCase> {
+        return@single GetAccountUseCase(get())
     }
 
 }
