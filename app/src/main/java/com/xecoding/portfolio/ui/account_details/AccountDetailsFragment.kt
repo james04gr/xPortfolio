@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.CalendarConstraints
@@ -61,6 +63,7 @@ class AccountDetailsFragment : Fragment() {
                             currentAccount = it.first
                             currentDetails = it.second.accountDetails
                             (activity as? AppCompatActivity)?.supportActionBar?.title = it.first.displayName()
+                            (activity as? AppCompatActivity)?.supportActionBar?.subtitle = it.first.amountWithCurrency()
                             mainViewModel.setIsFavorite(it.first.isFavorite.toBoolean())
                             setUpFavoriteIcon()
                             updateSelectedAccountViews(it.first)
@@ -79,6 +82,28 @@ class AccountDetailsFragment : Fragment() {
                     // In order to hide the Clear button if Filter has not been applied
                     mainViewModel.isFiltered.collectLatest {
                         binding.clear.visibility = if (it) View.VISIBLE else View.GONE
+                    }
+                }
+
+                launch {
+                    viewAdapter.loadStateFlow.collectLatest { loadState ->
+                        when (loadState.refresh) {
+                            is LoadState.Error -> {
+                                binding.transactionLabel.text = "No available transactions"
+                                binding.transactionLabel.isVisible = true
+                                binding.transactionLoading.isVisible = false
+                            }
+                            is LoadState.Loading -> {
+                                binding.transactionLabel.text = "Loading transactions"
+                                binding.transactionLabel.isVisible = true
+                                binding.transactionLoading.isVisible = true
+                            }
+                            else -> {
+                                binding.transactionLabel.text = "Loading transactions"
+                                binding.transactionLabel.isVisible = false
+                                binding.transactionLoading.isVisible = false
+                            }
+                        }
                     }
                 }
             }
@@ -120,7 +145,7 @@ class AccountDetailsFragment : Fragment() {
         state.accountDetails?.let {
             binding.details.apply {
                 productName.text = "<b>Product name:</b> ${it.product_name}".asHtml()
-                openedDate.text = "<b>Opened date:</b> ${it.opened_date}".asHtml()
+                openedDate.text = "<b>Opened date:</b> ${it.opened_date.formatAs()}".asHtml()
                 branch.text = "<b>Branch:</b> ${it.branch}".asHtml()
                 beneficiaries.text = "<b>Beneficiaries:</b> ${it.beneficiaries.joinToString(separator = ", ")}".asHtml()
             }

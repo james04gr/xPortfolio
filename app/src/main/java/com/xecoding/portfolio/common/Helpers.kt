@@ -6,9 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Spanned
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
-import androidx.fragment.app.Fragment
+import com.xecoding.portfolio.common.Params.DATE_SEPARATOR_FORMAT
 import com.xecoding.portfolio.common.Params.DEFAULT_DATE_FORMAT
 import com.xecoding.portfolio.common.Params.FORMAT_dd_MM_yyyy
 import com.xecoding.portfolio.data.persistent.Account
@@ -48,6 +47,12 @@ fun isSameDay(date1: String, date2: String): Boolean =
     ).format(
         fromStringToDate(date2)
     )
+
+fun String.formatAs(format: String = DATE_SEPARATOR_FORMAT): String {
+    val formatter = SimpleDateFormat(DEFAULT_DATE_FORMAT)
+    val newDate = formatter.parse(this) ?: return ""
+    return SimpleDateFormat(format).format(newDate)
+}
 
 fun Account.displayName(): String =
     if (account_nickname.isNullOrEmpty()) account_number.toString()

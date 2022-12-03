@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.xecoding.portfolio.common.NetworkResponse
+import com.xecoding.portfolio.common.formatAs
 import com.xecoding.portfolio.common.isSameDay
 import com.xecoding.portfolio.common.toDetails
 import com.xecoding.portfolio.data.persistent.Account
@@ -32,15 +33,10 @@ class MainViewModel : ViewModel(), KoinComponent {
     // Keep state for Portfolio Screen
     private val _accountsState = MutableStateFlow(AccountListState())
     val accountsState: StateFlow<AccountListState> = _accountsState
-
-    // Keep state for Account info on Details Screen
-    private val _accountDetailsState = MutableStateFlow(AccountDetailsState())
-
     val accounts: Flow<List<Account>> = observeAccountsUseCase()
 
     // Keep state for Account info on Details Screen
-//    private val _accountTransactions = MutableStateFlow(AccountTransactionsState())
-//    val accountTransactions: StateFlow<AccountTransactionsState> = _accountTransactions
+    private val _accountDetailsState = MutableStateFlow(AccountDetailsState())
 
     // Keep the selected id of the account that user clicked to navigate to
     private val _selectedAccountId: MutableStateFlow<String> = MutableStateFlow("")
@@ -125,31 +121,18 @@ class MainViewModel : ViewModel(), KoinComponent {
                 .insertSeparators { before: TransactionUi.TransactionItem?, after: TransactionUi.TransactionItem? ->
                     when {
                         before == null && after == null -> null
-                        before != null && after == null -> TransactionUi.DateItem(before.transaction.date)
-                        before == null && after != null -> TransactionUi.DateItem(after.transaction.date)
+                        before != null && after == null -> TransactionUi.DateItem(before.transaction.date.formatAs())
+                        before == null && after != null -> TransactionUi.DateItem(after.transaction.date.formatAs())
                         before != null && after != null -> if (!isSameDay(
                                 before.transaction.date, after.transaction.date
                             )
-                        ) TransactionUi.DateItem(after.transaction.date)
+                        ) TransactionUi.DateItem(after.transaction.date.formatAs())
                         else null
                         else -> null
                     }
                 }
         }
     }
-
-    /*fun getAccountTransactions(accountId: String, fromDate: String = "", toDate: String = "") {
-        getAccountTransactionsUseCase(accountId, fromDate, toDate).onEach {
-            when (it) {
-                is NetworkResponse.Loading ->
-                    _accountTransactions.value = AccountTransactionsState(isLoading = true)
-                is NetworkResponse.Success ->
-                    _accountTransactions.value = AccountTransactionsState(transactions = it.data?.transactions ?: emptyList())
-                is NetworkResponse.Error ->
-                    _accountTransactions.value = AccountTransactionsState(error = it.message ?: "Unexpected error occurred")
-            }
-        }.launchIn(viewModelScope)
-    }*/
 
     fun setSelectedAccountId(accountId: String) {
         _selectedAccountId.value = accountId
