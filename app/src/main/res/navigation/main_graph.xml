@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/accountListFragment"
         android:name="com.xecoding.portfolio.ui.account_list.AccountListFragment"
-        android:label="fragment_account_list"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_account_list" >
         <action
             android:id="@+id/action_accountListFragment_to_accountDetailsFragment"
@@ -17,7 +17,6 @@
     <fragment
         android:id="@+id/accountDetailsFragment"
         android:name="com.xecoding.portfolio.ui.account_details.AccountDetailsFragment"
-        android:label="fragment_account_details"
         tools:layout="@layout/fragment_account_details">
         <argument
             android:name="account_id"
