@@ -74,13 +74,13 @@ class AccountListFragment : Fragment() {
         binding.swipeRefreshLayout.isRefreshing = state.isLoading
         binding.accountsRecycler.visibility = if (state.isLoading) View.GONE else View.VISIBLE
 
-        state.error?.let {
-            binding.errorText.text = it
-            binding.errorText.visibility = View.VISIBLE
-        } ?: run {
-            binding.errorText.text = ""
-            binding.errorText.visibility = View.GONE
-        }
+//        state.error?.let {
+//            binding.errorText.text = it
+//            binding.errorText.visibility = View.VISIBLE
+//        } ?: run {
+//            binding.errorText.text = ""
+//            binding.errorText.visibility = View.GONE
+//        }
     }
 
     private fun navigateToAccountDetails(account: Account) {

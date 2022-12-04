@@ -6,11 +6,14 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.xecoding.portfolio.BuildConfig
+import com.xecoding.portfolio.data.remote.ConnectivityObserver
 import com.xecoding.portfolio.data.remote.api.AuthenticationInterceptor
 import com.xecoding.portfolio.data.remote.api.HeaderInterceptor
 import com.xecoding.portfolio.data.remote.api.PortfolioApi
 import com.xecoding.portfolio.domain.repository.transactions.TransactionsPagingSource
+import com.xecoding.portfolio.ui.ConnectivityObserverImpl
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
@@ -51,5 +54,9 @@ val networkModule = module {
             addConverterFactory(GsonConverterFactory.create())
             client(get<OkHttpClient>())
         }.build().create(PortfolioApi::class.java)
+    }
+
+    single<ConnectivityObserver> {
+        return@single ConnectivityObserverImpl(androidContext())
     }
 }

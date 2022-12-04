@@ -8,6 +8,7 @@ import com.xecoding.portfolio.common.formatAs
 import com.xecoding.portfolio.common.isSameDay
 import com.xecoding.portfolio.common.toDetails
 import com.xecoding.portfolio.data.persistent.Account
+import com.xecoding.portfolio.data.remote.ConnectivityObserver
 import com.xecoding.portfolio.data.remote.dto.AccountDetailsDto
 import com.xecoding.portfolio.domain.repository.transactions.TransactionsPagingSource
 import com.xecoding.portfolio.domain.use_case.*
@@ -29,6 +30,7 @@ class MainViewModel : ViewModel(), KoinComponent {
     private val deleteFavoriteAccountUseCase: DeleteFavoriteAccountUseCase by inject()
     private val observeAccountsUseCase: ObserveAccountsUseCase by inject()
     private val getAccountUseCase: GetAccountUseCase by inject()
+    val connectivityObserver: ConnectivityObserver by inject()
 
     // Keep state for Portfolio Screen
     private val _accountsState = MutableStateFlow(AccountListState())

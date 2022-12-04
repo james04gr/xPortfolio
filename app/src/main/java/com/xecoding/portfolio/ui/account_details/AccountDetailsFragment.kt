@@ -155,13 +155,14 @@ class AccountDetailsFragment : Fragment() {
             if (!state.isLoading) binding.details.root.visibility = View.GONE
         }
 
-        state.error?.let {
-            binding.errorText.text = it
-            binding.errorText.visibility = View.VISIBLE
-        } ?: run {
-            binding.errorText.text = ""
-            binding.errorText.visibility = View.GONE
-        }
+//        state.error?.let {
+//            bindin
+    //            g.errorText.text = it
+//            binding.errorText.visibility = View.VISIBLE
+//        } ?: run {
+//            binding.errorText.text = ""
+//            binding.errorText.visibility = View.GONE
+//        }
     }
 
     private fun setUpFavoriteIcon() {
