@@ -6,7 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-// ToDo Headers for API
 interface PortfolioApi {
 
     @GET("/accounts")

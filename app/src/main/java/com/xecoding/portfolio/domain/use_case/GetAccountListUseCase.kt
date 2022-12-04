@@ -16,7 +16,7 @@ class GetAccountListUseCase(
         try {
             emit(NetworkResponse.Loading())
             val accounts = accountRepository.fetchAccounts()
-            val databaseAccounts = accountRepository.getDatabaseAccounts()
+            val databaseAccounts = accountRepository.databaseAccounts()
             val newAccounts = refreshAccounts(accounts, databaseAccounts)
             accountRepository.insertAccounts(newAccounts)
             emit(NetworkResponse.Success(data = newAccounts))

@@ -20,7 +20,7 @@ interface AccountRepository {
 
     fun getAccount(accountId: String): Flow<Account?>
 
-    suspend fun getDatabaseAccounts(): List<Account>
+    suspend fun databaseAccounts(): List<Account>
 
     suspend fun insertAccounts(accounts: List<Account>)
 

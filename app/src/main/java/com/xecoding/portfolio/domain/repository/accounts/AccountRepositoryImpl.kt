@@ -34,27 +34,25 @@ class AccountRepositoryImpl(
     override fun getAccount(accountId: String): Flow<Account?> =
         appDatabase.accountsDao().getAccount(accountId)
 
-    override suspend fun getDatabaseAccounts(): List<Account> =
-        appDatabase.accountsDao().getDatabaseAccounts()
+    override suspend fun databaseAccounts(): List<Account> =
+        appDatabase.accountsDao().databaseAccounts()
 
     override suspend fun insertAccounts(accounts: List<Account>) = withContext(Dispatchers.IO) {
         appDatabase.accountsDao().insert(accounts)
     }
 
-    override suspend fun updateFavorite(accountId: String?) {
+    override suspend fun updateFavorite(accountId: String?) =
         accountId?.let {
             appDatabase.accountsDao().resetFavorite()
             appDatabase.accountsDao().setFavorite(it)
         } ?:
             appDatabase.accountsDao().resetFavorite()
-    }
 
     override suspend fun getDetails(accountId: String): Details? =
         appDatabase.detailsDao().getDetails(accountId)
 
-    override suspend fun refreshDetails(details: Details) {
+    override suspend fun refreshDetails(details: Details) =
         appDatabase.detailsDao().refreshDetails(details)
-    }
 
     override suspend fun deleteDetails() =
         appDatabase.detailsDao().delete()

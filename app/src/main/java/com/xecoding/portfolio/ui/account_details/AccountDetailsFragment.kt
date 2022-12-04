@@ -63,7 +63,6 @@ class AccountDetailsFragment : Fragment() {
                             currentAccount = it.first
                             currentDetails = it.second.accountDetails
                             (activity as? AppCompatActivity)?.supportActionBar?.title = it.first.displayName()
-                            (activity as? AppCompatActivity)?.supportActionBar?.subtitle = it.first.amountWithCurrency()
                             mainViewModel.setIsFavorite(it.first.isFavorite.toBoolean())
                             setUpFavoriteIcon()
                             updateSelectedAccountViews(it.first)

@@ -1,0 +1,8 @@
+{
+  "product_name": "Current Account EUR",
+  "opened_date": "2015-12-03T10:15:30Z",
+  "branch": "Main Branch",
+  "beneficiaries": [
+    "John Doe", "Xenofon Karydis"
+  ]
+}

@@ -22,8 +22,6 @@ class TransactionsPagingSource(
 
         return try {
             val isFiltered = fromDate.isNotEmpty() && toDate.isNotEmpty()
-            println("## Request for $accountId with page $nextPageNumber isFiltered $isFiltered")
-
             val transactions = if (isFiltered) portfolioApi.getFilteredTransactions(
                 accountId, FilteredTransactionsRequest(
                     from_date = fromDate,
@@ -35,8 +33,6 @@ class TransactionsPagingSource(
                 accountId, TransactionsRequest(nextPageNumber)
             )
 
-            println("## Request success")
-            println("## ----------------------------------------------")
             LoadResult.Page(
                 data = transactions.transactions,
                 prevKey = null,
@@ -44,16 +40,9 @@ class TransactionsPagingSource(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            println("## Request failed")
-            println("## ----------------------------------------------")
             LoadResult.Error(e)
         }
     }
-
-//    private fun getTransactionRequest(nextPageNumber: Int): TransactionsRequest =
-//        if (fromDate.isNotEmpty() && toDate.isNotEmpty()) FilteredTransactionsRequest(
-//            fromDate, nextPageNumber, toDate
-//        ) else TransactionsRequest(nextPageNumber)
 
     override fun getRefreshKey(state: PagingState<Int, Transaction>): Int? {
         return state.anchorPosition?.let { anchorPosition ->

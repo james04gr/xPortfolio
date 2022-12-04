@@ -6,7 +6,9 @@ import com.xecoding.portfolio.data.persistent.AppDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val databaseModule = module { single {
+val databaseModule = module {
+
+    single {
         return@single BuildConfig.DATABASE_NAME
     }
 

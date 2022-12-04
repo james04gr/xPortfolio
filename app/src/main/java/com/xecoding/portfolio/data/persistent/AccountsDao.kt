@@ -22,7 +22,7 @@ interface AccountsDao {
     fun resetFavorite()
 
     @Query("""Select * from account""")
-    suspend fun getDatabaseAccounts(): List<Account>
+    suspend fun databaseAccounts(): List<Account>
 
     @Query("""Delete from account""")
     fun deleteAccounts()

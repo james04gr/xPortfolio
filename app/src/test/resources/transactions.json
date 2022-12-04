@@ -1,0 +1,65 @@
+{
+  "transactions": [
+    {
+      "id": "a1a9e85b-0f21-451b-813f-44ebabff46c9",
+      "date": "2018-05-16T10:15:30Z",
+      "transaction_amount": "199.21",
+      "transaction_type": "intrabank",
+      "description": null,
+      "is_debit": false
+    },
+    {
+      "id": "a1a9e85b-0f21-451b-813f-44ebabff46c9",
+      "date": "2018-05-16T10:15:30Z",
+      "transaction_amount": "199.21",
+      "transaction_type": "intrabank",
+      "description": null,
+      "is_debit": false
+    },
+    {
+      "id": "a1a9e85b-0f21-451b-813f-44ebabff46c9",
+      "date": "2018-05-16T10:15:30Z",
+      "transaction_amount": "199.21",
+      "transaction_type": "intrabank",
+      "description": null,
+      "is_debit": false
+    },
+    {
+      "id": "a1a9e85b-0f21-451b-813f-44ebabff46c9",
+      "date": "2018-05-16T10:15:30Z",
+      "transaction_amount": "199.21",
+      "transaction_type": "intrabank",
+      "description": null,
+      "is_debit": false
+    },
+    {
+      "id": "a1a9e85b-0f21-451b-813f-44ebabff46c9",
+      "date": "2018-05-16T10:15:30Z",
+      "transaction_amount": "199.21",
+      "transaction_type": "intrabank",
+      "description": null,
+      "is_debit": false
+    },
+    {
+      "id": "a1a9e85b-0f21-451b-813f-44ebabff46c9",
+      "date": "2018-05-16T10:15:30Z",
+      "transaction_amount": "199.21",
+      "transaction_type": "intrabank",
+      "description": null,
+      "is_debit": false
+    },
+    {
+      "id": "a1a9e85b-0f21-451b-813f-44ebabff46c9",
+      "date": "2018-05-16T10:15:30Z",
+      "transaction_amount": "199.21",
+      "transaction_type": "intrabank",
+      "description": null,
+      "is_debit": false
+    }
+  ],
+  "paging": {
+    "pages_count": 1,
+    "total_items": 7,
+    "current_page": 0
+  }
+}

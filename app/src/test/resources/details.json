@@ -1,0 +1,9 @@
+{
+  "id": "1f34c76a-b3d1-43bc-af91-a82716f1bc2e",
+  "product_name": "Current Account EUR",
+  "opened_date": "2015-12-03T10:15:30Z",
+  "branch": "Main Branch",
+  "beneficiaries": [
+    "John Doe", "Xenofon Karydis"
+  ]
+}
