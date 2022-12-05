@@ -10,8 +10,7 @@ import com.xecoding.portfolio.data.remote.ConnectivityObserver
 import com.xecoding.portfolio.data.remote.api.AuthenticationInterceptor
 import com.xecoding.portfolio.data.remote.api.HeaderInterceptor
 import com.xecoding.portfolio.data.remote.api.PortfolioApi
-import com.xecoding.portfolio.domain.repository.transactions.TransactionsPagingSource
-import com.xecoding.portfolio.ui.ConnectivityObserverImpl
+import com.xecoding.portfolio.data.remote.ConnectivityObserverImpl
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import java.util.concurrent.TimeUnit

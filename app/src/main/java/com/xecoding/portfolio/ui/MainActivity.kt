@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.xecoding.portfolio.R
 import com.xecoding.portfolio.data.remote.ConnectivityObserver
 import com.xecoding.portfolio.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -36,40 +37,33 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        mainViewModel.connectivityObserver.networkState().onEach {
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.connectivityObserver.networkState().collectLatest {
             when (it) {
                 ConnectivityObserver.ConnectionStatus.Available -> {
                     binding.errorText.apply {
-                        text = "Connection available"
-                        background =
-                            ContextCompat.getDrawable(this@MainActivity, R.drawable.success_background)
-                        isVisible = true
-                        hideConnectivityBox()
+                        isVisible = false
                     }
-
                 }
                 ConnectivityObserver.ConnectionStatus.Unavailable -> {
                     binding.errorText.apply {
                         text = "Connection unavailable"
                         background =
-                            ContextCompat.getDrawable(this@MainActivity, R.drawable.error_background)
+                            ContextCompat.getDrawable(
+                                this@MainActivity,
+                                R.drawable.error_background
+                            )
                         isVisible = true
                     }
                 }
             }
-        }.launchIn(lifecycleScope)
+        }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
-    private fun hideConnectivityBox() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.errorText.isVisible = false
-        }, 1500)
-    }
-
 
 }

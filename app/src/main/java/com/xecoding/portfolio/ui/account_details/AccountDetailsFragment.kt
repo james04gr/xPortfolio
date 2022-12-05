@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
@@ -21,11 +22,9 @@ import com.xecoding.portfolio.R
 import com.xecoding.portfolio.common.*
 import com.xecoding.portfolio.data.persistent.Account
 import com.xecoding.portfolio.data.remote.dto.AccountDetailsDto
-import com.xecoding.portfolio.data.remote.dto.AccountDto
 import com.xecoding.portfolio.databinding.FragmentAccountDetailsBinding
 import com.xecoding.portfolio.ui.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 
 class AccountDetailsFragment : Fragment() {
@@ -72,12 +71,6 @@ class AccountDetailsFragment : Fragment() {
                 }
 
                 launch {
-                    mainViewModel.transactionsFlow.collectLatest {
-                        viewAdapter.submitData(it)
-                    }
-                }
-
-                launch {
                     // In order to hide the Clear button if Filter has not been applied
                     mainViewModel.isFiltered.collectLatest {
                         binding.clear.visibility = if (it) View.VISIBLE else View.GONE
@@ -91,20 +84,29 @@ class AccountDetailsFragment : Fragment() {
                                 binding.transactionLabel.text = "No available transactions"
                                 binding.transactionLabel.isVisible = true
                                 binding.transactionLoading.isVisible = false
+                                binding.transactions.isVisible = false
                             }
                             is LoadState.Loading -> {
                                 binding.transactionLabel.text = "Loading transactions"
                                 binding.transactionLabel.isVisible = true
                                 binding.transactionLoading.isVisible = true
+                                binding.transactions.isVisible = false
                             }
                             else -> {
                                 binding.transactionLabel.text = "Loading transactions"
                                 binding.transactionLabel.isVisible = false
                                 binding.transactionLoading.isVisible = false
+                                binding.transactions.isVisible = true
                             }
                         }
                     }
                 }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.transactions.asFlow().collectLatest {
+                viewAdapter.submitData(it)
             }
         }
 
@@ -155,14 +157,9 @@ class AccountDetailsFragment : Fragment() {
             if (!state.isLoading) binding.details.root.visibility = View.GONE
         }
 
-//        state.error?.let {
-//            bindin
-    //            g.errorText.text = it
-//            binding.errorText.visibility = View.VISIBLE
-//        } ?: run {
-//            binding.errorText.text = ""
-//            binding.errorText.visibility = View.GONE
-//        }
+        state.error?.let {
+            requireContext().toast(it)
+        }
     }
 
     private fun setUpFavoriteIcon() {
@@ -190,7 +187,8 @@ class AccountDetailsFragment : Fragment() {
         mainViewModel.setInputSource(
             currentAccount.id,
             fromDate = start.formatAs(),
-            toDate = end.formatAs())
+            toDate = end.formatAs()
+        )
     }
 
     private fun clearDateFilters() {

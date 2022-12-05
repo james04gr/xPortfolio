@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xecoding.portfolio.R
+import com.xecoding.portfolio.common.toast
 import com.xecoding.portfolio.data.persistent.Account
 import com.xecoding.portfolio.databinding.FragmentAccountListBinding
 import com.xecoding.portfolio.ui.MainViewModel
@@ -73,14 +74,9 @@ class AccountListFragment : Fragment() {
     private fun updateViews(state: AccountListState) {
         binding.swipeRefreshLayout.isRefreshing = state.isLoading
         binding.accountsRecycler.visibility = if (state.isLoading) View.GONE else View.VISIBLE
-
-//        state.error?.let {
-//            binding.errorText.text = it
-//            binding.errorText.visibility = View.VISIBLE
-//        } ?: run {
-//            binding.errorText.text = ""
-//            binding.errorText.visibility = View.GONE
-//        }
+        state.error?.let {
+            requireContext().toast(it)
+        }
     }
 
     private fun navigateToAccountDetails(account: Account) {
