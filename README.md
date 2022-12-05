@@ -1,6 +1,6 @@
 # xPortfolio
 
-Portfolio is an Android Sample application for displaying personal accounts and latest transactions
+Portfolio is an Android Sample application that displays the accounts of a banking institution mobile user.
 
 ## Build strategy
 General practices and tools used for the development
